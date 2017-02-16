@@ -43,11 +43,30 @@ var partOne = [
 
 var sentences = R.map(words)
 
+console.log(sentences(partOne))
 
+// Exercise 2
+// ==========
+// Refactor to remove all args by partially applying the functions.
 
+var oldFilterQs = function(xs) {
+  return R.filter(function(x) {
+    return R.match(/q/i, x)
+  }, xs)
+}
 
+var filterQs = R.curry(R.filter(R.match(/q/i)))
 
+console.time(filterQs)
+console.log(filterQs(text))
+console.timeEnd(filterQs)
 
+//console.time('oldFilterQs')
+//console.log(oldFilterQs(text))
+//console.timeEnd('oldFilterQs')
+
+// Seems like the new filterQs is about 3 milliseconds slower than the old one
+// Obviously negligible, but I wonder why that is?
 
 
 
