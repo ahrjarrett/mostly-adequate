@@ -105,10 +105,16 @@ console.log(max([1, 2, Infinity]))
 var slice = R.curry((start, end, xs) => xs.slice(start, end))
 console.log(slice(0)(2)([1, 2, 3]))
 
+// Bonus 2:
+// ========
+// Use slice to define a function "take" that takes n elements
+// from the beginning of the string. Make it curried.
+// // Result for "Something" with n=4 should be "Some"
 
+// Went ahead and made a function called take4 that only
+// Requires one argument
+var take = R.curry(slice(0))
+var take4 = take(4)
 
-
-
-
-
-
+console.log(take4('Something'))
+console.log(take(4)('Something'))
