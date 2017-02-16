@@ -61,12 +61,54 @@ console.time(filterQs)
 console.log(filterQs(text))
 console.timeEnd(filterQs)
 
+// Seems like the new filterQs is about 3 milliseconds slower than the old one
+// Obviously negligible, but I wonder why that is?
 //console.time('oldFilterQs')
 //console.log(oldFilterQs(text))
 //console.timeEnd('oldFilterQs')
 
-// Seems like the new filterQs is about 3 milliseconds slower than the old one
-// Obviously negligible, but I wonder why that is?
+// Exercise 3
+// ==========
+// Use the helper function _keepHighest to
+// refactor max to not reference any args
+
+var _keepHighest = function(x, y) {
+  return x >= y ? x : y
+}
+
+var oldMax = function(xs) {
+  return R.reduce(function(acc, x) {
+    return _keepHighest(acc, x)
+  }, -Infinity, xs)
+}
+
+// Notes: First thing I notice is that -Infinity is the
+// Original value, against which the first current
+// value will be compared. The xs passed in after-ward
+// is passed in as the argument that oldMax receives
+// as it's argument when the function is called.
+
+var max = R.reduce(_keepHighest, -Infinity)
+
+console.log(max([1, 2, Infinity]))
+// console.log(oldMax([1, 2, Infinity]))
+
+// Bonus 1:
+// ========
+// Wrap array's slice to be functional and curried.
+//console.log([1, 2, 3].slice(0, 2))
+
+// Original answer (I guess you can't curry Array.prototype,
+// which makes sense because the data is passed in first)
+//var slice = R.curry(Array.slice)
+
+var slice = R.curry((start, end, xs) => xs.slice(start, end))
+console.log(slice(0)(2)([1, 2, 3]))
+
+
+
+
+
 
 
 
