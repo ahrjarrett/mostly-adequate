@@ -1,4 +1,5 @@
 var R = require('ramda')
+var accounting = require('accounting')
 
 var CARS = [{
   name: 'Ferrari FF',
@@ -94,9 +95,53 @@ console.log(sanitizeNames(CARS))
 // Bonus 1:
 // ========
 // Refactor availablePrices with compose.
+// // Surprisingly, I got this one on the first try.
+var availablePrices_old = function(cars) {
+  var available_cars = R.filter(R.prop('in_stock'), cars)
+  return available_cars.map(function(x) {
+    return accounting.formatMoney(x.dollar_value)
+  }).join(', ')
+}
 
+var availablePrices = R.compose(
+  R.join(', '),
+  accounting.formatMoney,
+  R.map(R.prop('dollar_value')),
+  R.filter(R.prop('in_stock')))
 
+console.log(availablePrices(CARS))
+console.log(availablePrices_old(CARS))
 
+// Bonus 2:
+// ========
+// Refactor to pointfree.
+// Hint: You can use R.flip.
+// This one took me a while. The hint actually didn't help
+// at first, but it's good to know R.flip is there if I need it.
+
+// // From the Ramda Docs:
+// // Returns a new function much like the supplied one,
+// // except that the first two arguments' order is reversed.
+
+var fastestCar_old = function(cars) {
+  var sorted = R.sortBy(function(car) {
+    return car.horsepower
+  }, cars)
+  var fastest = R.last(sorted)
+  return fastest.name + ' is the fastest'
+}
+
+var append = R.flip(R.concat)
+
+var fastestCar = R.compose(
+  append(' is the fastest'),
+  R.prop('name'),
+  R.last,
+  R.sortBy(R.prop('horsepower'))
+)
+
+console.log(fastestCar(CARS))
+console.log(fastestCar_old(CARS))
 
 
 
